@@ -61,20 +61,20 @@ function Hud({step, correct}) {
   );
 }
 
-function Question({ question, onClickVariant }) {
+function Question({ question, onClickVariant, isCorrect, selectedVariant }) {
   return (
     <>
-    <h2 id="question">{question.title}</h2>
-    <ul className="choices-container">
-          {
-            question.variants.map((variant, index) => (
-              <li key={index} className="choice-container choice-btn">
-                <p className="choice-prefix">{String.fromCharCode(65 + index)}</p>
-                <p className="choice-text" onClick={() => onClickVariant(index)}>{variant}</p>
-              </li>
-            ))
-          }
-        </ul>
+      <h2 id="question">{question.title}</h2>
+      <ul className="choices-container">
+        {
+          question.variants.map((variant, index) => (
+            <li key={index} className={`choice-container choice-btn ${selectedVariant === index ? (isCorrect ? 'correct' : 'incorrect') : ''}`}>
+              <p className="choice-prefix">{String.fromCharCode(65 + index)}</p>
+              <p className="choice-text" onClick={() => onClickVariant(index)}>{variant}</p>
+            </li>
+          ))
+        }
+      </ul>
     </>
   );
 }
@@ -82,15 +82,23 @@ function Question({ question, onClickVariant }) {
 function App() {
   const [step, setStep] = React.useState(0);
   const [correct, setCorrect] = React.useState(0);
+  const [isCorrect, setIsCorrect] = React.useState(null);
+  const [selectedVariant, setSelectedVariant] = React.useState(null);
   const question = questions[step];
  
   const onClickVariant = (index) => {
-    setStep(step + 1);  
-    console.log(step, index);
-
+    setSelectedVariant(index);
     if (index === question.correct) {
       setCorrect(correct + 1);
+      setIsCorrect(true);
+    } else {
+      setIsCorrect(false);
     }
+    setTimeout(() => {
+      setStep(step + 1);
+      setIsCorrect(null);
+      setSelectedVariant(null);
+    }, 1000);
   }
 
   return (
@@ -98,7 +106,7 @@ function App() {
     <div className="container">
       <div id="game" className="justify-center flex-column hidden">
         <Hud step={step} correct={correct}/>
-        <Question question={question} onClickVariant={onClickVariant}/>
+        <Question question={question} onClickVariant={onClickVariant} isCorrect={isCorrect} selectedVariant={selectedVariant}/>
       </div>
     </div>
   );
