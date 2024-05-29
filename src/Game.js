@@ -57,6 +57,12 @@ function Question({ question, onClickVariant, isCorrect, selectedVariant }) {
   );
 }
 
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
+
 function App() {
   const [questions, setQuestions] = useState([]);
   const [step, setStep] = useState(0);
@@ -77,8 +83,8 @@ function App() {
             variants.splice(correctAnswerIndex, 0, item.correct_answer);
   
             return {
-              title: decodeURIComponent(encodeURIComponent(item.question)),
-              variants: variants.map(variant => decodeURIComponent(encodeURIComponent(variant))),
+              title: decodeHtml(item.question),
+              variants: variants.map(variant => decodeHtml(variant)),
               correct: correctAnswerIndex,
             };
           });
