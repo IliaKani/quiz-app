@@ -57,13 +57,13 @@ function Question({ question, onClickVariant, isCorrect, selectedVariant }) {
   );
 }
 
-function decodeHtml(html) {
-  var txt = document.createElement("textarea");
+const decodeHtml = html => {
+  const txt = document.createElement("textarea");
   txt.innerHTML = html;
   return txt.value;
 }
 
-function App() {
+const App = () => {
   const [questions, setQuestions] = useState([]);
   const [step, setStep] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -71,29 +71,30 @@ function App() {
   const [selectedVariant, setSelectedVariant] = useState(null);
 
   useEffect(() => {
-    fetch('https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple')
-      .then(response => response.json())
-      .then(data => {
-        if (data.results) {
-          const formattedQuestions = data.results.map((item, index) => {
-            const incorrectAnswersIndexes = item.incorrect_answers.length;
-            const correctAnswerIndex = Math.floor(Math.random() * (incorrectAnswersIndexes + 1));
+    const fetchQuestions = async () => {
+      const response = await fetch('https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple');
+      const data = await response.json();
+      if (data.results) {
+        const formattedQuestions = data.results.map(item => {
+          const incorrectAnswersIndexes = item.incorrect_answers.length;
+          const correctAnswerIndex = Math.floor(Math.random() * (incorrectAnswersIndexes + 1));
   
-            let variants = [...item.incorrect_answers];
-            variants.splice(correctAnswerIndex, 0, item.correct_answer);
+          let variants = [...item.incorrect_answers];
+          variants.splice(correctAnswerIndex, 0, item.correct_answer);
   
-            return {
-              title: decodeHtml(item.question),
-              variants: variants.map(variant => decodeHtml(variant)),
-              correct: correctAnswerIndex,
-            };
-          });
-          setQuestions(formattedQuestions);
-        }
-      });
+          return {
+            title: decodeHtml(item.question),
+            variants: variants.map(variant => decodeHtml(variant)),
+            correct: correctAnswerIndex,
+          };
+        });
+        setQuestions(formattedQuestions);
+      }
+    };
+    fetchQuestions();
   }, []);
 
-  const onClickVariant = (index) => {
+  const onClickVariant = index => {
     const question = questions[step];
     setSelectedVariant(index);
     if (index === question.correct) {
