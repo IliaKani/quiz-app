@@ -1,34 +1,12 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Game.scss";
 
-const questions = [
-  {
-    title: 'React - это ... ?',
-    variants: ['библиотека', 'фреймворк', 'приложение'],
-    correct: 0,
-  },
-  {
-    title: 'Компонент - это ... ',
-    variants: ['приложение', 'часть приложения или страницы', 'то, что я не знаю что такое'],
-    correct: 1,
-  },
-  {
-    title: 'Что такое JSX?',
-    variants: [
-      'Это простой HTML',
-      'Это функция',
-      'Это тот же HTML, но с возможностью выполнять JS-код',
-    ],
-    correct: 2,
-  },
-];
-
-function Result({correct}) {
+function Result({correct, total}) {
   return (
     <div className="result">
       <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" />
-      <h2>you got {correct} correct answers out of {questions.length}</h2>
+      <h2>you got {correct} correct answers out of {total}</h2>
       <a href="/">
         <button>Try again</button>
       </a>
@@ -36,14 +14,14 @@ function Result({correct}) {
   );
 }
 
-function Hud({step, correct}) {
-  const percentage = Math.round((step / questions.length) * 100);
+function Hud({step, correct, total}) {
+  const percentage = Math.round((step / total) * 100);
 
   return (
     <div id="hud">
     <div id="hud-item">
       <p id="progressText" className="hud-prefix">
-        Question {step} out of {questions.length}
+        Question {step} out of {total}
       </p>
       <div id="progressBar">
         <div id="progressBarFull" style={{width: `${percentage}%`}} />
@@ -80,13 +58,37 @@ function Question({ question, onClickVariant, isCorrect, selectedVariant }) {
 }
 
 function App() {
-  const [step, setStep] = React.useState(0);
-  const [correct, setCorrect] = React.useState(0);
-  const [isCorrect, setIsCorrect] = React.useState(null);
-  const [selectedVariant, setSelectedVariant] = React.useState(null);
-  const question = questions[step];
- 
+  const [questions, setQuestions] = useState([]);
+  const [step, setStep] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+
+  useEffect(() => {
+    fetch('https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple')
+      .then(response => response.json())
+      .then(data => {
+        if (data.results) {
+          const formattedQuestions = data.results.map((item, index) => {
+            const incorrectAnswersIndexes = item.incorrect_answers.length;
+            const correctAnswerIndex = Math.floor(Math.random() * (incorrectAnswersIndexes + 1));
+  
+            let variants = [...item.incorrect_answers];
+            variants.splice(correctAnswerIndex, 0, item.correct_answer);
+  
+            return {
+              title: decodeURIComponent(encodeURIComponent(item.question)),
+              variants: variants.map(variant => decodeURIComponent(encodeURIComponent(variant))),
+              correct: correctAnswerIndex,
+            };
+          });
+          setQuestions(formattedQuestions);
+        }
+      });
+  }, []);
+
   const onClickVariant = (index) => {
+    const question = questions[step];
     setSelectedVariant(index);
     if (index === question.correct) {
       setCorrect(correct + 1);
@@ -101,11 +103,17 @@ function App() {
     }, 1000);
   }
 
+  if (questions.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  const question = questions[step];
+
   return (
-    step >= questions.length ? <Result correct={correct}/> :
+    step >= questions.length ? <Result correct={correct} total={questions.length}/> :
     <div className="container">
       <div id="game" className="justify-center flex-column hidden">
-        <Hud step={step} correct={correct}/>
+        <Hud step={step} correct={correct} total={questions.length}/>
         <Question question={question} onClickVariant={onClickVariant} isCorrect={isCorrect} selectedVariant={selectedVariant}/>
       </div>
     </div>
