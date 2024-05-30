@@ -1,43 +1,34 @@
 :root {
-  --background-color: rgb(249,219,61);
-  --font-size: 62.5%;
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --color: #333;
-  --blue: #56a5eb;
-  --white: white;
-  --box-shadow: 0 0.4rem 1.4rem 0 rgba(86, 185, 235, 0.5);
-  --border: 0.1rem solid var(--blue);
-  --font-size-rem: 1.8rem;
-  --padding-rem: 1rem 0;
-  --width-rem: 20rem;
-  --text-align: center;
-  --background-color-white: white;
-  --margin-bottom-rem: 1rem;
-  --text-decoration: none;
-  --color-blue: var(--blue);
+    background-color: rgb(249,219,61);
+    font-size: 62.5%;
+    /* default size is 16 px. 62.5% is 10px. */
 }
 
-* {
-  box-sizing: border-box;
-  font-family: var(--font-family);
-  margin: 0;
-  padding: 0;
-  color: var(--color);
+*{
+    box-sizing: border-box; 
+    /* to include border size in the box size */
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding:0;
+    color: #333;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   margin-bottom: 1rem;
 }
 
 h1 {
   font-size: 5.4rem;
-  color: var(--blue);
+  color: #56a5eb;
   margin-bottom: 5rem;
+}
 
-  > span {
-    font-size: 2.4rem;
-    font-weight: 500;
-  }
+h1 > span {
+  font-size: 2.4rem;
+  font-weight: 500;
 }
 
 h2 {
@@ -49,85 +40,92 @@ h2 {
 h3 {
   font-size: 2.8rem;
   font-weight: 500;
-  color: var(--blue);
+  color: #56a5eb;
 }
 
-.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 2rem;
+/* Utilities */
 
-  > * {
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.container > * {
     width: 100%;
-  }
 }
 
 .flex-column {
-  display: flex;
-  flex-direction: column;
-}
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flex-center {
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Buttons */
 
-.flex-center, .justify-center {
-  justify-content: center;
-}
-
-.flex-center {
-  align-items: center;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.btn {
-  font-size: var(--font-size-rem);
-  padding: var(--padding-rem);
-  width: var(--width-rem);
-  text-align: var(--text-align);
-  border: var(--border);
-  margin-bottom: var(--margin-bottom-rem);
-  text-decoration: var(--text-decoration);
-  color: var(--color-blue);
-  background-color: var(--background-color-white);
-
-  &:hover {
+  .btn {
+    font-size: 1.8rem;
+    padding: 1rem 0;
+    width: 20rem;
+    text-align: center;
+    border: 0.1rem solid #56a5eb;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: #56a5eb;
+    background-color: white;
+  }
+  
+  .btn:hover {
     cursor: pointer;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(86, 185, 235, 0.5);
     transform: translateY(-0.1rem);
     transition: transform 150ms;
   }
-
-  &[disabled]:hover {
+  
+  .btn[disabled]:hover {
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
   }
-}
 
-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  /* FORMS */
+  form {
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-input {
-  margin-bottom: 1rem;
-  width: 20rem;
-  padding: 1.5rem;
-  font-size: 1.8rem;
-  border: none;
-  box-shadow: var(--box-shadow);
+  input {
+    margin-bottom: 1rem;
+    width: 20rem;
+    padding: 1.5rem;
+    font-size: 1.8rem;
+    border: none;
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(86, 185, 235, 0.5);
+  }
 
-  &::placeholder {
+  input::placeholder {
     color: #aaa;
   }
-}
+
  
 #code-block {
     width: 500px;
