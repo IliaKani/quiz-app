@@ -2,9 +2,9 @@
 
 This is a simple quiz game built with React. The game fetches questions from the Open Trivia Database API and presents them to the user. The user can select an answer for each question, and at the end of the game, the user's score is displayed.
 
-## Getting Started
+## Live Demo
 
-To get a local copy up and running, follow these steps:
+The application is deployed and can be accessed at [https://quiz-app-iliakani.vercel.app/](https://quiz-app-iliakani.vercel.app/)
 
 ### Prerequisites
 
